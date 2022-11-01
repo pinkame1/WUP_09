@@ -69,9 +69,44 @@ We used models that gave us our residual standard error and adjusted r^2 in orde
 
 ## Bream
 
+```{r}
+Fish <- read.csv("Fish.csv")
+Bream <- filter(Fish, Species=="Bream")
+Bream <- select (Bream,-Species)
+```
+
 ### Best Models
 
 ### Best Two regressor model
+
+```{r}
+library(leaps)
+regsubsets.out <-
+    regsubsets(Weight ~ .,
+               data = Bream,
+               nbest = 1,       # 1 best model for each number of predictors
+               nvmax = NULL,    # NULL for no limit on number of variables
+               force.in = NULL, force.out = NULL,
+               method = "exhaustive")
+
+summary.out <- summary(regsubsets.out)
+as.data.frame(summary.out$outmat)
+library(car)
+subsets(regsubsets.out,statistic="adjr2",legend="bottomright",main="Adjusted R^2")
+```
+The best two regressive models are Length 1, Height, and Width then Length 2 and Height because they are closest to 1 which means its more accurate than the rest. 
+
+```{r}
+breammodel <- lm (Weight~ Height + Width, data=Bream)
+summary.lm(breammodel)
+```
+
+```{r}
+model3 <- lm (Weight~ Height + Width + Length1+ Length2+ Length3, data=Bream)
+summary.lm(model3)
+```
+This model shows us how accurate our two regressive models because they are closer to one with the adjusted r^2. 
+
 
 ## Roach
 
