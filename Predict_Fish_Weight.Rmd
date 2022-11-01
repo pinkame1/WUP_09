@@ -21,11 +21,17 @@ require(tidyverse)
 # Predicting Fish Weight
 
 
+
 ## Perch
 
+```{r}
+Fish <- read.csv("Fish.csv")
+Perch <- filter(Fish, Species=="Perch")
+```
 
 
 ### Best Models
+
 
 ### Best Two regressor model
 
