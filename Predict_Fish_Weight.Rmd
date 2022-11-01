@@ -34,9 +34,38 @@ Perch <- select (Perch,-Species)
 ### Best Models
 
 
-
 ### Best Two regressor model
 
+```{r}
+library(leaps)
+regsubsets.out <-
+    regsubsets(Weight ~ .,
+               data = Perch,
+               nbest = 1,       # 1 best model for each number of predictors
+               nvmax = NULL,    # NULL for no limit on number of variables
+               force.in = NULL, force.out = NULL,
+               method = "exhaustive")
+
+summary.out <- summary(regsubsets.out)
+as.data.frame(summary.out$outmat)
+library(car)
+subsets(regsubsets.out,statistic="adjr2",legend="topright",main="Adjusted R^2")
+```
+
+The two best regressive models are Height and Weight because their adjusted R^2 is closer to 1 (0.9400).
+
+```{r}
+perchmodel <- lm (Weight~ Height + Width, data=Perch)
+summary.lm(perchmodel)
+```
+
+
+```{r}
+pmodel <- lm (Weight~ Height + Width + Length1+ Length2+ Length3, data=Perch)
+summary.lm(pmodel)
+```
+
+We used models that gave us our residual standard error and adjusted r^2 in order to double check our first claim. Since the adjusted r^2 is closer to 1, it proves that these models are the best fit. Our standard error is at its lowest with Height and Weight. 
 
 ## Bream
 
