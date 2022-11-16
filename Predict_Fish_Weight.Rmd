@@ -26,15 +26,29 @@ require(tidyverse)
 
 ```{r}
 Fish <- read.csv("Fish.csv")
+
 Perch <- filter(Fish, Species=="Perch")
+
 Perch <- select (Perch,-Species)
 ```
+
+
+
+```{r}
+basicNN <- ggplot(Perch,aes(y=Weight, x=Length3)) 
+basicNN + geom_point()+ geom_lm()
+```
+
+
 
 
 ### Best Models
 
 
+
+
 ### Best Two regressor model
+
 
 ```{r}
 library(leaps)
@@ -71,7 +85,9 @@ We used models that gave us our residual standard error and adjusted r^2 in orde
 
 ```{r}
 Fish <- read.csv("Fish.csv")
-Bream <- filter(Fish, Species=="Bream")
+
+Bream <- filter(Fish, Species =="Perch")
+
 Bream <- select (Bream,-Species)
 ```
 
@@ -110,8 +126,47 @@ This model shows us how accurate our two regressive models because they are clos
 
 ## Roach
 
-### Best Models
+```{r}
+Fish <- read.csv("Fish.csv")
+Roach <- filter(Fish, Species=="Roach")
+Roach <- select (Roach,-Species)
+```
+
+
+### Best Model
 
 ### Best Two regressor model
 
+```{r}
+library(leaps)
+regsubsets.out <-
+    regsubsets(Weight ~ .,
+               data = Roach,
+               nbest = 1,       # 1 best model for each number of predictors
+               nvmax = NULL,    # NULL for no limit on number of variables
+               force.in = NULL, force.out = NULL,
+               method = "exhaustive")
+
+summary.out <- summary(regsubsets.out)
+as.data.frame(summary.out$outmat)
+library(car)
+subsets(regsubsets.out,statistic="adjr2",legend="topright",main="Adjusted R^2")
+```
+
+
+Our best regression model is Length3 and width because the adjusted r^2 is the highest one compared to the others. Since its closer to one its more accurate.
+
+
+```{r}
+roachmodel <- lm (Weight~ Length3 + Width, data=Roach)
+summary.lm(roachmodel)
+```
+
+
 ## Final Summary Statements
+
+The fish species Bream has a mean weight of 617.8 which is 1.6x as big as Perch. which is 382.2. Roach has a mean weight that is twice as small(152.0) as Perch. Half as big as the Perch species. Bream is the heaviest fish twice as heavy as Perch. 
+0.94 perch adjusted r^2, standard deviation is higher than all fishes at 347.61. 
+0.93 bream adjusted r^2, standard deviation is lower than perch, 347.6, but still has a higher number than roach. 
+Perch has a Residual standard error of 85.17 which indicates that the data is not as close as Bream as its Residual standard error is 53.1. The lower the Residual standard error and the higher the r^2 shows how accurate the species Bream was. 
+
